@@ -55,11 +55,13 @@
             top: 100%;
             left: 0;
             background-color: #34495e;
-            min-width: 200px;
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
             border-radius: 5px;
-            overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             z-index: 10;
+            text-align: left;
         }
         /* Se muestra al pasar el mouse sobre el li padre */
         nav ul li:hover ul.submenu {
@@ -73,6 +75,7 @@
             padding: 10px 15px;
             display: block;
             font-weight: normal;
+            font-size: 14px;
         }
         nav ul li ul.submenu li a:hover {
             background-color: #2c3e50;
@@ -87,6 +90,7 @@
         .catalogo {
             margin: 40px auto;
             max-width: 800px;
+            padding: 0 20px;
         }
         .categoria-titulo {
             color: #2c3e50;
@@ -103,8 +107,22 @@
             margin-bottom: 20px;
             text-align: left;
         }
-        .producto h2 {
+        .producto h3 {
             color: #2c3e50;
+            margin-top: 0;
+        }
+        .btn-comprar {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-comprar:hover {
+            background-color: #1e8449;
         }
     </style>
 </head>
@@ -119,14 +137,24 @@
                 <li>
                     <a href="#libros">Libros ▾</a>
                     <ul class="submenu">
-                        <li><a href="#libros">Ebook: Resiliencia y Esperanza</a></li>
-                        <li><a href="#libros">Audiolibro: Mensajes de Superación</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7890495/hotlink" target="_blank">Resiliencia y Esperanza</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7785120/hotlink" target="_blank">La Chispa de la Resiliencia</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#cursos">Cursos ▾</a>
                     <ul class="submenu">
-                        <li><a href="#cursos">Curso Online: Fuerza Interior</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7842346/hotlink" target="_blank">Curso de Revisiones Sistemáticas</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7831907/hotlink" target="_blank">Construyendo un Metaanálisis</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7766090/hotlink" target="_blank">Construyendo la tesis de grado paso a paso</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7826314/hotlink" target="_blank">Análisis Cualitativo con Atlas TI</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7821927/hotlink" target="_blank">Análisis de Datos con Python</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7800969/hotlink" target="_blank">Estadística utilizando SPSS</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7821792/hotlink" target="_blank">Estadística utilizando Stata</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7801026/hotlink" target="_blank">Estadística con Python</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7773295/hotlink" target="_blank">Estadística utilizando Excel</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7801000/hotlink" target="_blank">Estadística utilizando R</a></li>
+                        <li><a href="https://app.hotmart.com/products/manage/7822102/hotlink" target="_blank">Tesis Paso a Paso: Asesoría en Investigación</a></li>
                     </ul>
                 </li>
             </ul>
@@ -141,22 +169,63 @@
     <section class="catalogo">
 
         <h2 class="categoria-titulo" id="libros">Libros</h2>
+
         <div class="producto">
-            <h2>Ebook: Resiliencia y Esperanza</h2>
-            <p>Un libro digital que te guía a superar retos y mantener la motivación en tu vida diaria.</p>
+            <h3>Resiliencia y Esperanza</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7890495/hotlink" target="_blank">Ver / Comprar</a>
         </div>
         <div class="producto">
-            <h2>Audiolibro: Mensajes de Superación</h2>
-            <p>Escucha frases y reflexiones que te acompañan en tu camino de crecimiento personal.</p>
+            <h3>La Chispa de la Resiliencia</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7785120/hotlink" target="_blank">Ver / Comprar</a>
         </div>
 
         <h2 class="categoria-titulo" id="cursos">Cursos</h2>
+
         <div class="producto">
-            <h2>Curso Online: Fuerza Interior</h2>
-            <p>Un programa interactivo para descubrir tu potencial y fortalecer tu confianza.</p>
+            <h3>Curso de Revisiones Sistemáticas</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7842346/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Construyendo un Metaanálisis</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7831907/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Construyendo la tesis de grado paso a paso</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7766090/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Curso de Análisis Cualitativo con Atlas TI</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7826314/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Curso de Análisis de Datos con Python</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7821927/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Curso de Estadística utilizando SPSS</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7800969/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Curso de Estadística utilizando Stata</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7821792/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Estadística con Python</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7801026/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Estadística utilizando Excel</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7773295/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Estadística utilizando R</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7801000/hotlink" target="_blank">Ver / Comprar</a>
+        </div>
+        <div class="producto">
+            <h3>Tesis Paso a Paso: Curso Integral de Asesoría en Investigación</h3>
+            <a class="btn-comprar" href="https://app.hotmart.com/products/manage/7822102/hotlink" target="_blank">Ver / Comprar</a>
         </div>
 
     </section>
 </body>
 </html>
-
