@@ -1,29 +1,70 @@
-// categories.js
-// Archivo de configuración con las categorías del sitio.
-// Cada categoría tiene un id, nombre visible, slug (para URLs/filtros) e ícono.
-// El array "items" queda vacío por ahora: ahí irán los libros o cursos que agregues después.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo Motivacional – Jorge Andrés Hincapié Correa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .portada img {
+            max-width: 500px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 3px solid #ccc;
+        }
+        .catalogo {
+            margin: 40px auto;
+            max-width: 800px;
+        }
+        .producto {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .producto h2 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Catálogo Motivacional</h1>
+        <p>Autor: Jorge Andrés Hincapié Correa</p>
+    </header>
 
-const categories = [
-  {
-    id: 1,
-    name: "Libros",
-    slug: "libros",
-    icon: "📚",
-    description: "Catálogo de libros disponibles",
-    items: []
-  },
-  {
-    id: 2,
-    name: "Cursos",
-    slug: "cursos",
-    icon: "🎓",
-    description: "Catálogo de cursos disponibles",
-    items: []
-  }
-];
+    <section class="portada">
+        <!-- Imagen portada motivacional -->
+        <img src="assets/images/Copilot_20260619_114853.png" alt="Portada motivacional">
+    </section>
 
-// Si usas módulos ES (import/export) en tu proyecto, descomenta la siguiente línea:
-// export default categories;
-
-// Si usas Node/CommonJS, descomenta la siguiente línea:
-// module.exports = categories;
+    <section class="catalogo">
+        <div class="producto">
+            <h2>Ebook: Resiliencia y Esperanza</h2>
+            <p>Un libro digital que te guía a superar retos y mantener la motivación en tu vida diaria.</p>
+        </div>
+        <div class="producto">
+            <h2>Curso Online: Fuerza Interior</h2>
+            <p>Un programa interactivo para descubrir tu potencial y fortalecer tu confianza.</p>
+        </div>
+        <div class="producto">
+            <h2>Audiolibro: Mensajes de Superación</h2>
+            <p>Escucha frases y reflexiones que te acompañan en tu camino de crecimiento personal.</p>
+        </div>
+    </section>
+</body>
+</html>
