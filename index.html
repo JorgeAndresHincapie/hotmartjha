@@ -7,611 +7,571 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-
-  /* =========================================================
-     ╔═══════════════════════════════════════════════════════╗
-     ║  CÓMO EDITAR TUS PRODUCTOS                             ║
-     ║  Busca el bloque "const PRODUCTOS = [...]" más abajo  ║
-     ║  en el <script>. Cada producto es un objeto con:      ║
-     ║  titulo, categoria, precio, etiqueta, img, link        ║
-     ╚═══════════════════════════════════════════════════════╝
-     ========================================================= */
-
-  :root{
-    --ink:        #16213A;   /* azul tinta - fondo principal */
-    --ink-2:      #1F2D4D;   /* azul tinta, un tono más claro */
-    --paper:      #F1E7D2;   /* papel kraft - tarjetas */
-    --paper-2:    #E7DABE;   /* papel kraft, sombra */
-    --mustard:    #D9A23B;   /* acento cálido - pestañas, detalles */
-    --terracota:  #BB4A30;   /* sello / CTA */
-    --terracota-d:#9A3A24;
-    --text-dark:  #20222B;
-    --text-paper: #5B5240;
-    --cream:      #FBF6EC;
-  }
-
-  *{ box-sizing: border-box; }
-
-  html{ scroll-behavior: smooth; }
-
-  body{
-    margin:0;
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,162,59,0.10), transparent 60%),
-      var(--ink);
-    color: var(--cream);
-    font-family: 'Space Grotesk', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  /* textura sutil de papel tramado sobre el fondo tinta */
-  body::before{
-    content:"";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
-    z-index: 0;
-  }
-
-  a{ color: inherit; text-decoration: none; }
-
-  /* ---------- HEADER ---------- */
-
-  header{
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 64px 32px 40px;
-    text-align: center;
-  }
-
-  .eyebrow{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--mustard);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 22px;
-    opacity: 0;
-    animation: fadeUp 0.7s ease forwards;
-    animation-delay: 0.05s;
-  }
-  .eyebrow::before, .eyebrow::after{
-    content:"";
-    width: 28px; height: 1px;
-    background: var(--mustard);
-    opacity: 0.6;
-  }
-
-  h1.titulo{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(40px, 7vw, 86px);
-    line-height: 0.98;
-    margin: 0 0 18px;
-    letter-spacing: -0.01em;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards;
-    animation-delay: 0.15s;
-  }
-  h1.titulo em{
-    font-style: italic;
-    color: var(--mustard);
-  }
-
-  .subtitulo{
-    max-width: 560px;
-    margin: 0 auto;
-    font-size: 16.5px;
-    line-height: 1.6;
-    color: rgba(251,246,236,0.72);
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards;
-    animation-delay: 0.25s;
-  }
-
-  @keyframes fadeUp{
-    from{ opacity:0; transform: translateY(14px); }
-    to{ opacity:1; transform: translateY(0); }
-  }
-
-  /* ---------- BARRA DE BÚSQUEDA ---------- */
-
-  .buscador-wrap{
-    max-width: 480px;
-    margin: 34px auto 0;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards;
-    animation-delay: 0.32s;
-  }
-  .buscador{
-    width: 100%;
-    background: rgba(251,246,236,0.07);
-    border: 1px solid rgba(251,246,236,0.18);
-    border-radius: 999px;
-    padding: 13px 22px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14.5px;
-    color: var(--cream);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .buscador::placeholder{ color: rgba(251,246,236,0.4); }
-  .buscador:focus{
-    border-color: var(--mustard);
-    background: rgba(251,246,236,0.1);
-  }
-
-  /* ---------- PESTAÑAS DE CATEGORÍA (estilo carpeta) ---------- */
-
-  .tabs-section{
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 48px auto 0;
-    padding: 0 32px;
-  }
-
-  .tabs{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0;
-    border-bottom: 2px solid rgba(251,246,236,0.14);
-  }
-
-  .tab{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: transparent;
-    border: none;
-    color: rgba(251,246,236,0.55);
-    padding: 13px 20px 15px;
-    cursor: pointer;
-    position: relative;
-    transition: color 0.2s;
-    white-space: nowrap;
-  }
-  .tab:hover{ color: var(--cream); }
-  .tab.activa{
-    color: var(--mustard);
-  }
-  .tab.activa::after{
-    content:"";
-    position: absolute;
-    left: 14px; right: 14px; bottom: -2px;
-    height: 2px;
-    background: var(--mustard);
-    border-radius: 2px;
-  }
-  .tab .conteo{
-    opacity: 0.55;
-    margin-left: 5px;
-    font-size: 11px;
-  }
-
-  /* ---------- GRID DE PRODUCTOS ---------- */
-
-  main{
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 44px 32px 100px;
-  }
-
-  .grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 26px;
-  }
-
-  .ficha{
-    background: var(--paper);
-    border-radius: 4px;
-    position: relative;
-    color: var(--text-dark);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 14px 30px -18px rgba(0,0,0,0.55);
-    transform: translateY(0);
-    transition: transform 0.28s cubic-bezier(.2,.8,.2,1), box-shadow 0.28s ease;
-    opacity: 0;
-    animation: cardIn 0.6s ease forwards;
-  }
-  @keyframes cardIn{
-    from{ opacity: 0; transform: translateY(16px); }
-    to{ opacity: 1; transform: translateY(0); }
-  }
-  .ficha:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 24px 38px -16px rgba(0,0,0,0.6);
-  }
-
-  /* perforación tipo ficha de catálogo en el borde superior */
-  .ficha::before{
-    content:"";
-    position: absolute;
-    top: 0; left: 22px; right: 22px;
-    height: 1px;
-    background-image: radial-gradient(circle, rgba(0,0,0,0.16) 1px, transparent 1.4px);
-    background-size: 10px 1px;
-    background-repeat: repeat-x;
-    transform: translateY(7px);
-  }
-
-  .ficha-img{
-    height: 150px;
-    border-radius: 4px 4px 0 0;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--paper-2);
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 12px;
-  }
-
-  .etiqueta{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: var(--ink);
-    color: var(--mustard);
-    padding: 5px 9px;
-    border-radius: 3px;
-  }
-
-  .sello{
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    border: 2px solid var(--terracota);
-    color: var(--terracota);
-    background: rgba(251,246,236,0.88);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 8.5px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    line-height: 1.15;
-    transform: rotate(8deg);
-    flex-shrink: 0;
-  }
-
-  .ficha-body{
-    padding: 18px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
-  }
-
-  .ficha-categoria{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--terracota-d);
-  }
-
-  .ficha-titulo{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 19px;
-    line-height: 1.22;
-    margin: 0;
-  }
-
-  .ficha-desc{
-    font-size: 13.5px;
-    line-height: 1.55;
-    color: var(--text-paper);
-    margin: 0;
-    flex: 1;
-  }
-
-  .ficha-footer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 6px;
-    padding-top: 14px;
-    border-top: 1px dashed rgba(32,34,43,0.22);
-  }
-
-  .precio{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 17px;
-    font-weight: 500;
-  }
-  .precio .desde{
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-paper);
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .btn-hotmart{
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    background: var(--terracota);
-    color: var(--cream);
-    padding: 10px 16px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s, transform 0.2s;
-  }
-  .btn-hotmart:hover{
-    background: var(--terracota-d);
-    transform: translateX(2px);
-  }
-  .btn-hotmart svg{ width: 13px; height: 13px; }
-
-  /* ---------- ESTADO VACÍO ---------- */
-  .vacio{
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 70px 20px;
-    color: rgba(251,246,236,0.55);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-  }
-
-  /* ---------- FOOTER ---------- */
-  footer{
-    position: relative;
-    z-index: 2;
-    border-top: 1px solid rgba(251,246,236,0.12);
-    padding: 30px 32px 40px;
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    letter-spacing: 0.04em;
-    color: rgba(251,246,236,0.45);
-  }
-
-  /* ---------- accesibilidad / reduced motion ---------- */
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  }
-
-  *:focus-visible{
-    outline: 2px solid var(--mustard);
-    outline-offset: 2px;
-  }
-
-  @media (max-width: 560px){
-    header{ padding: 48px 20px 28px; }
-    .tabs-section, main{ padding-left: 20px; padding-right: 20px; }
-    .tabs{ overflow-x: auto; }
-  }
+ 
+/* =========================================================
+╔═══════════════════════════════════════════════════════╗
+║ CÓMO EDITAR TUS PRODUCTOS ║
+║ Busca el bloque "const PRODUCTOS = [...]" más abajo ║
+║ en el <script>. Cada producto es un objeto con: ║
+║ titulo, categoria, precio, etiqueta, img, link ║
+╚═══════════════════════════════════════════════════════╝
+========================================================= */
+ 
+:root{
+--ink: #16213A; /* azul tinta - fondo principal */
+--ink-2: #1F2D4D; /* azul tinta, un tono más claro */
+--paper: #F1E7D2; /* papel kraft - tarjetas */
+--paper-2: #E7DABE; /* papel kraft, sombra */
+--mustard: #D9A23B; /* acento cálido - pestañas, detalles */
+--terracota: #BB4A30; /* sello / CTA */
+--terracota-d:#9A3A24;
+--text-dark: #20222B;
+--text-paper: #5B5240;
+--cream: #FBF6EC;
+}
+ 
+*{ box-sizing: border-box; }
+ 
+html{ scroll-behavior: smooth; }
+ 
+body{
+margin:0;
+background:
+radial-gradient(ellipse 900px 500px at 15% -10%, rgba(217,162,59,0.10), transparent 60%),
+var(--ink);
+color: var(--cream);
+font-family: 'Space Grotesk', sans-serif;
+-webkit-font-smoothing: antialiased;
+overflow-x: hidden;
+}
+ 
+/* textura sutil de papel tramado sobre el fondo tinta */
+body::before{
+content:"";
+position: fixed;
+inset: 0;
+pointer-events: none;
+background-image:
+repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
+z-index: 0;
+}
+ 
+a{ color: inherit; text-decoration: none; }
+ 
+/* ---------- HEADER ---------- */
+ 
+header{
+position: relative;
+z-index: 2;
+max-width: 1200px;
+margin: 0 auto;
+padding: 64px 32px 40px;
+text-align: center;
+}
+ 
+.eyebrow{
+font-family: 'IBM Plex Mono', monospace;
+font-size: 12.5px;
+letter-spacing: 0.22em;
+text-transform: uppercase;
+color: var(--mustard);
+display: inline-flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 22px;
+opacity: 0;
+animation: fadeUp 0.7s ease forwards;
+animation-delay: 0.05s;
+}
+.eyebrow::before, .eyebrow::after{
+content:"";
+width: 28px; height: 1px;
+background: var(--mustard);
+opacity: 0.6;
+}
+ 
+h1.titulo{
+font-family: 'Fraunces', serif;
+font-weight: 600;
+font-size: clamp(40px, 7vw, 86px);
+line-height: 0.98;
+margin: 0 0 18px;
+letter-spacing: -0.01em;
+opacity: 0;
+animation: fadeUp 0.8s ease forwards;
+animation-delay: 0.15s;
+}
+h1.titulo em{
+font-style: italic;
+color: var(--mustard);
+}
+ 
+.subtitulo{
+max-width: 560px;
+margin: 0 auto;
+font-size: 16.5px;
+line-height: 1.6;
+color: rgba(251,246,236,0.72);
+opacity: 0;
+animation: fadeUp 0.8s ease forwards;
+animation-delay: 0.25s;
+}
+ 
+@keyframes fadeUp{
+from{ opacity:0; transform: translateY(14px); }
+to{ opacity:1; transform: translateY(0); }
+}
+ 
+/* ---------- BARRA DE BÚSQUEDA ---------- */
+ 
+.buscador-wrap{
+max-width: 480px;
+margin: 34px auto 0;
+opacity: 0;
+animation: fadeUp 0.8s ease forwards;
+animation-delay: 0.32s;
+}
+.buscador{
+width: 100%;
+background: rgba(251,246,236,0.07);
+border: 1px solid rgba(251,246,236,0.18);
+border-radius: 999px;
+padding: 13px 22px;
+font-family: 'Space Grotesk', sans-serif;
+font-size: 14.5px;
+color: var(--cream);
+outline: none;
+transition: border-color 0.2s, background 0.2s;
+}
+.buscador::placeholder{ color: rgba(251,246,236,0.4); }
+.buscador:focus{
+border-color: var(--mustard);
+background: rgba(251,246,236,0.1);
+}
+ 
+/* ---------- PESTAÑAS DE CATEGORÍA (estilo carpeta) ---------- */
+ 
+.tabs-section{
+position: relative;
+z-index: 2;
+max-width: 1200px;
+margin: 48px auto 0;
+padding: 0 32px;
+}
+ 
+.tabs{
+display: flex;
+flex-wrap: wrap;
+gap: 0;
+border-bottom: 2px solid rgba(251,246,236,0.14);
+}
+ 
+.tab{
+font-family: 'IBM Plex Mono', monospace;
+font-size: 12.5px;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+background: transparent;
+border: none;
+color: rgba(251,246,236,0.55);
+padding: 13px 20px 15px;
+cursor: pointer;
+position: relative;
+transition: color 0.2s;
+white-space: nowrap;
+}
+.tab:hover{ color: var(--cream); }
+.tab.activa{
+color: var(--mustard);
+}
+.tab.activa::after{
+content:"";
+position: absolute;
+left: 14px; right: 14px; bottom: -2px;
+height: 2px;
+background: var(--mustard);
+border-radius: 2px;
+}
+.tab .conteo{
+opacity: 0.55;
+margin-left: 5px;
+font-size: 11px;
+}
+ 
+/* ---------- GRID DE PRODUCTOS ---------- */
+ 
+main{
+position: relative;
+z-index: 2;
+max-width: 1200px;
+margin: 0 auto;
+padding: 44px 32px 100px;
+}
+ 
+.grid{
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+gap: 26px;
+}
+ 
+.ficha{
+background: var(--paper);
+border-radius: 4px;
+position: relative;
+color: var(--text-dark);
+display: flex;
+flex-direction: column;
+box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 14px 30px -18px rgba(0,0,0,0.55);
+transform: translateY(0);
+transition: transform 0.28s cubic-bezier(.2,.8,.2,1), box-shadow 0.28s ease;
+opacity: 0;
+animation: cardIn 0.6s ease forwards;
+}
+@keyframes cardIn{
+from{ opacity: 0; transform: translateY(16px); }
+to{ opacity: 1; transform: translateY(0); }
+}
+.ficha:hover{
+transform: translateY(-5px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 24px 38px -16px rgba(0,0,0,0.6);
+}
+ 
+/* perforación tipo ficha de catálogo en el borde superior */
+.ficha::before{
+content:"";
+position: absolute;
+top: 0; left: 22px; right: 22px;
+height: 1px;
+background-image: radial-gradient(circle, rgba(0,0,0,0.16) 1px, transparent 1.4px);
+background-size: 10px 1px;
+background-repeat: repeat-x;
+transform: translateY(7px);
+}
+ 
+.ficha-img{
+height: 150px;
+border-radius: 4px 4px 0 0;
+background-size: cover;
+background-position: center;
+background-color: var(--paper-2);
+position: relative;
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+padding: 12px;
+}
+ 
+.etiqueta{
+font-family: 'IBM Plex Mono', monospace;
+font-size: 10.5px;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+background: var(--ink);
+color: var(--mustard);
+padding: 5px 9px;
+border-radius: 3px;
+}
+ 
+.sello{
+width: 46px; height: 46px;
+border-radius: 50%;
+border: 2px solid var(--terracota);
+color: var(--terracota);
+background: rgba(251,246,236,0.88);
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+font-family: 'IBM Plex Mono', monospace;
+font-size: 8.5px;
+font-weight: 600;
+letter-spacing: 0.03em;
+text-transform: uppercase;
+line-height: 1.15;
+transform: rotate(8deg);
+flex-shrink: 0;
+}
+ 
+.ficha-body{
+padding: 18px 20px 20px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+flex: 1;
+}
+ 
+.ficha-categoria{
+font-family: 'IBM Plex Mono', monospace;
+font-size: 10.5px;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(--terracota-d);
+}
+ 
+.ficha-titulo{
+font-family: 'Fraunces', serif;
+font-weight: 600;
+font-size: 19px;
+line-height: 1.22;
+margin: 0;
+}
+ 
+.ficha-desc{
+font-size: 13.5px;
+line-height: 1.55;
+color: var(--text-paper);
+margin: 0;
+flex: 1;
+}
+ 
+.ficha-footer{
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-top: 6px;
+padding-top: 14px;
+border-top: 1px dashed rgba(32,34,43,0.22);
+}
+ 
+.precio{
+font-family: 'IBM Plex Mono', monospace;
+font-size: 17px;
+font-weight: 500;
+}
+.precio .desde{
+font-size: 10px;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(--text-paper);
+display: block;
+margin-bottom: 2px;
+}
+ 
+.btn-hotmart{
+font-family: 'Space Grotesk', sans-serif;
+font-size: 13px;
+font-weight: 600;
+background: var(--terracota);
+color: var(--cream);
+padding: 10px 16px;
+border-radius: 999px;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+transition: background 0.2s, transform 0.2s;
+}
+.btn-hotmart:hover{
+background: var(--terracota-d);
+transform: translateX(2px);
+}
+.btn-hotmart svg{ width: 13px; height: 13px; }
+ 
+/* ---------- ESTADO VACÍO ---------- */
+.vacio{
+grid-column: 1 / -1;
+text-align: center;
+padding: 70px 20px;
+color: rgba(251,246,236,0.55);
+font-family: 'IBM Plex Mono', monospace;
+font-size: 13px;
+letter-spacing: 0.04em;
+}
+ 
+/* ---------- FOOTER ---------- */
+footer{
+position: relative;
+z-index: 2;
+border-top: 1px solid rgba(251,246,236,0.12);
+padding: 30px 32px 40px;
+text-align: center;
+font-family: 'IBM Plex Mono', monospace;
+font-size: 11.5px;
+letter-spacing: 0.04em;
+color: rgba(251,246,236,0.45);
+}
+ 
+/* ---------- accesibilidad / reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+*{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+ 
+*:focus-visible{
+outline: 2px solid var(--mustard);
+outline-offset: 2px;
+}
+ 
+@media (max-width: 560px){
+header{ padding: 48px 20px 28px; }
+.tabs-section, main{ padding-left: 20px; padding-right: 20px; }
+.tabs{ overflow-x: auto; }
+}
 </style>
 </head>
 <body>
-
+ 
 <header>
-  <span class="eyebrow">Catálogo digital</span>
-  <h1 class="titulo">Aprende algo<br><em>nuevo</em> hoy</h1>
-  <p class="subtitulo">Una selección de cursos y recursos digitales. Elige el que más te llame y completa tu compra de forma segura en Hotmart.</p>
-
-  <div class="buscador-wrap">
-    <input type="text" class="buscador" id="buscador" placeholder="Buscar un curso, tema o palabra clave…">
-  </div>
-</header>
-
-<div class="tabs-section">
-  <div class="tabs" id="tabs"></div>
+<span class="eyebrow">Catálogo digital</span>
+<h1 class="titulo">Aprende algo<br><em>nuevo</em> hoy</h1>
+<p class="subtitulo">Una selección de cursos y recursos digitales. Elige el que más te llame y completa tu compra de forma segura en Hotmart.</p>
+ 
+<div class="buscador-wrap">
+<input type="text" class="buscador" id="buscador" placeholder="Buscar un curso, tema o palabra clave…">
 </div>
-
+</header>
+ 
+<div class="tabs-section">
+<div class="tabs" id="tabs"></div>
+</div>
+ 
 <main>
-  <div class="grid" id="grid"></div>
+<div class="grid" id="grid"></div>
 </main>
-
+ 
 <footer>
-  Catálogo independiente · Las compras se procesan de forma segura en Hotmart
+Catálogo independiente · Las compras se procesan de forma segura en Hotmart
 </footer>
-
+ 
 <script>
 /* =========================================================================
-   1) TUS PRODUCTOS — EDITA ESTA LISTA
-   ─────────────────────────────────────────────────────────────────────────
-   Cada producto necesita:
-   - titulo:     nombre del curso/producto
-   - categoria:  para agrupar en las pestañas (usa el mismo texto en varios
-                 productos para que caigan en la misma pestaña)
-   - desc:       1-2 frases cortas que expliquen qué incluye
-   - precio:     texto libre, ej: "$97 USD" o "Desde $47"
-   - etiqueta:   (opcional) texto corto, ej: "NUEVO", "BESTSELLER", "" si no quieres ninguna
-   - img:        URL de una imagen (puede ser vacío "" y se usará un color de fondo)
-   - link:       LA URL de tu página de venta en Hotmart para ese producto
-   ========================================================================= */
-
+1) TUS PRODUCTOS — EDITA ESTA LISTA
+─────────────────────────────────────────────────────────────────────────
+Cada producto necesita:
+- titulo: nombre del curso/producto
+- categoria: para agrupar en las pestañas (usa el mismo texto en varios
+productos para que caigan en la misma pestaña)
+- desc: 1-2 frases cortas que expliquen qué incluye
+- precio: texto libre, ej: "$97 USD" o "Desde $47"
+- etiqueta: (opcional) texto corto, ej: "NUEVO", "BESTSELLER", "" si no quieres ninguna
+- img: URL de una imagen (puede ser vacío "" y se usará un color de fondo)
+- link: LA URL de tu página de venta en Hotmart para ese producto
+========================================================================= */
+ 
 const PRODUCTOS = [
-  {
-    titulo: "LA CHISPA DE LA RESILIENCIA",
-    categoria: "LIBROS",
-        img: "",
-    link: "https://go.hotmart.com/U106183954I"
-  },
-  {
-    titulo: "Finanzas Personales Inteligentes",
-    categoria: "Finanzas",
-    desc: "Organiza tus ingresos, ahorra con método y empieza a invertir sin miedo.",
-    precio: "$67 USD",
-    etiqueta: "",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-2"
-  },
-  {
-    titulo: "Copywriting que Vende",
-    categoria: "Marketing Digital",
-    desc: "Aprende a escribir textos persuasivos para anuncios, emails y redes sociales.",
-    precio: "$79 USD",
-    etiqueta: "NUEVO",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-3"
-  },
-  {
-    titulo: "Hábitos para una Vida Productiva",
-    categoria: "Desarrollo Personal",
-    desc: "Un sistema simple para construir rutinas que realmente se mantienen en el tiempo.",
-    precio: "$49 USD",
-    etiqueta: "",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-4"
-  },
-  {
-    titulo: "Excel para el Trabajo y los Negocios",
-    categoria: "Tecnología",
-    desc: "Fórmulas, tablas dinámicas y automatización para ser más eficiente en tu día a día.",
-    precio: "$59 USD",
-    etiqueta: "",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-5"
-  },
-  {
-    titulo: "Edición de Video con el Celular",
-    categoria: "Tecnología",
-    desc: "Crea contenido profesional para redes sociales usando solo tu teléfono.",
-    precio: "$45 USD",
-    etiqueta: "NUEVO",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-6"
-  },
-  {
-    titulo: "Mentalidad de Inversionista",
-    categoria: "Finanzas",
-    desc: "Conceptos clave para entender el mundo de las inversiones sin tecnicismos.",
-    precio: "Desde $39 USD",
-    etiqueta: "",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-7"
-  },
-  {
-    titulo: "Comunicación Asertiva",
-    categoria: "Desarrollo Personal",
-    desc: "Mejora tus relaciones personales y laborales aprendiendo a comunicarte mejor.",
-    precio: "$55 USD",
-    etiqueta: "BESTSELLER",
-    img: "",
-    link: "https://www.hotmart.com/products/tu-producto-8"
-  }
+{
+titulo: "LIBROS",
+categoria: "LIBROS DE AUTOAYUDA",
+desc: "Curso completo para crear y promocionar tu negocio online, paso a paso.",
+precio: "$97 USD",
+etiqueta: "BESTSELLER",
+img: "",
+link: "https://www.hotmart.com/products/tu-producto-1"
+},
+{
+titulo: "CURSOS DE ESTADISTICA",
+categoria: "ESTADISTICA",
+desc: "Organiza tus ingresos, ahorra con método y empieza a invertir sin miedo.",
+precio: "$67 USD",
+etiqueta: "",
+img: "",
+link: "https://www.hotmart.com/products/tu-producto-2"
+},
+{
+titulo: "CURSOS DE INVESTIGACION",
+categoria: "INVESTIGACION",
+desc: "Aprende a escribir textos persuasivos para anuncios, emails y redes sociales.",
+precio: "$79 USD",
+etiqueta: "NUEVO",
+img: "",
+link: "https://www.hotmart.com/products/tu-producto-3"
+},
+{
 ];
-
+ 
 /* ========================= 2) LÓGICA — no es necesario editar ========================= */
-
+ 
 const grid = document.getElementById('grid');
 const tabsEl = document.getElementById('tabs');
 const buscador = document.getElementById('buscador');
-
+ 
 const categorias = ["Todos", ...new Set(PRODUCTOS.map(p => p.categoria))];
 let categoriaActiva = "Todos";
 let textoBusqueda = "";
-
+ 
 function conteoPorCategoria(cat){
-  if(cat === "Todos") return PRODUCTOS.length;
-  return PRODUCTOS.filter(p => p.categoria === cat).length;
+if(cat === "Todos") return PRODUCTOS.length;
+return PRODUCTOS.filter(p => p.categoria === cat).length;
 }
-
+ 
 function renderTabs(){
-  tabsEl.innerHTML = categorias.map(cat => `
-    <button class="tab ${cat === categoriaActiva ? 'activa' : ''}" data-cat="${cat}">
-      ${cat}<span class="conteo">(${conteoPorCategoria(cat)})</span>
-    </button>
-  `).join('');
-
-  tabsEl.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      categoriaActiva = btn.dataset.cat;
-      renderTabs();
-      renderGrid();
-    });
-  });
-}
-
-function iniciales(titulo){
-  return titulo.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
-}
-
-function tarjeta(p, i){
-  const fondoImg = p.img
-    ? `background-image:url('${p.img}')`
-    : `background:linear-gradient(135deg, var(--paper-2), var(--paper))`;
-
-  return `
-    <a class="ficha" href="${p.link}" target="_blank" rel="noopener" style="animation-delay:${Math.min(i*0.04, 0.4)}s">
-      <div class="ficha-img" style="${fondoImg}">
-        ${p.etiqueta ? `<span class="etiqueta">${p.etiqueta}</span>` : '<span></span>'}
-        <span class="sello">Ver en<br>Hotmart</span>
-      </div>
-      <div class="ficha-body">
-        <span class="ficha-categoria">${p.categoria}</span>
-        <h3 class="ficha-titulo">${p.titulo}</h3>
-        <p class="ficha-desc">${p.desc}</p>
-        <div class="ficha-footer">
-          <span class="precio"><span class="desde">Precio</span>${p.precio}</span>
-          <span class="btn-hotmart">
-            Comprar
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-          </span>
-        </div>
-      </div>
-    </a>
-  `;
-}
-
-function renderGrid(){
-  let lista = PRODUCTOS;
-
-  if(categoriaActiva !== "Todos"){
-    lista = lista.filter(p => p.categoria === categoriaActiva);
-  }
-
-  if(textoBusqueda.trim() !== ""){
-    const q = textoBusqueda.toLowerCase();
-    lista = lista.filter(p =>
-      p.titulo.toLowerCase().includes(q) ||
-      p.desc.toLowerCase().includes(q) ||
-      p.categoria.toLowerCase().includes(q)
-    );
-  }
-
-  if(lista.length === 0){
-    grid.innerHTML = `<div class="vacio">No encontramos productos con esa búsqueda.</div>`;
-    return;
-  }
-
-  grid.innerHTML = lista.map((p,i) => tarjeta(p,i)).join('');
-}
-
-buscador.addEventListener('input', (e) => {
-  textoBusqueda = e.target.value;
-  renderGrid();
+tabsEl.innerHTML = categorias.map(cat => `
+<button class="tab ${cat === categoriaActiva ? 'activa' : ''}" data-cat="${cat}">
+${cat}<span class="conteo">(${conteoPorCategoria(cat)})</span>
+</button>
+`).join('');
+ 
+tabsEl.querySelectorAll('.tab').forEach(btn => {
+btn.addEventListener('click', () => {
+categoriaActiva = btn.dataset.cat;
+renderTabs();
+renderGrid();
 });
-
+});
+}
+ 
+function iniciales(titulo){
+return titulo.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
+ 
+function tarjeta(p, i){
+const fondoImg = p.img
+? `background-image:url('${p.img}')`
+: `background:linear-gradient(135deg, var(--paper-2), var(--paper))`;
+ 
+return `
+<a class="ficha" href="${p.link}" target="_blank" rel="noopener" style="animation-delay:${Math.min(i*0.04, 0.4)}s">
+<div class="ficha-img" style="${fondoImg}">
+${p.etiqueta ? `<span class="etiqueta">${p.etiqueta}</span>` : '<span></span>'}
+<span class="sello">Ver en<br>Hotmart</span>
+</div>
+<div class="ficha-body">
+<span class="ficha-categoria">${p.categoria}</span>
+<h3 class="ficha-titulo">${p.titulo}</h3>
+<p class="ficha-desc">${p.desc}</p>
+<div class="ficha-footer">
+<span class="precio"><span class="desde">Precio</span>${p.precio}</span>
+<span class="btn-hotmart">
+Comprar
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+</span>
+</div>
+</div>
+</a>
+`;
+}
+ 
+function renderGrid(){
+let lista = PRODUCTOS;
+ 
+if(categoriaActiva !== "Todos"){
+lista = lista.filter(p => p.categoria === categoriaActiva);
+}
+ 
+if(textoBusqueda.trim() !== ""){
+const q = textoBusqueda.toLowerCase();
+lista = lista.filter(p =>
+p.titulo.toLowerCase().includes(q) ||
+p.desc.toLowerCase().includes(q) ||
+p.categoria.toLowerCase().includes(q)
+);
+}
+ 
+if(lista.length === 0){
+grid.innerHTML = `<div class="vacio">No encontramos productos con esa búsqueda.</div>`;
+return;
+}
+ 
+grid.innerHTML = lista.map((p,i) => tarjeta(p,i)).join('');
+}
+ 
+buscador.addEventListener('input', (e) => {
+textoBusqueda = e.target.value;
+renderGrid();
+});
+ 
 renderTabs();
 renderGrid();
 </script>
-
+ 
 </body>
 </html>
+
